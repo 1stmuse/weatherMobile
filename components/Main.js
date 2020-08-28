@@ -36,15 +36,20 @@ const styles = StyleSheet.create({
     },
     tempFlex:{
         flexDirection:"row",
-        borderColor:'blue',
-        borderWidth:1,
+        justifyContent:'center',
+        alignItems:'center'
+        // borderColor:'blue',
+        // borderWidth:1,
     },
     cityTemp:{
-        fontSize:120,
+        fontSize:150,
+        textAlign:'right',
+        // marginLeft:40
     },
     tempN:{
         fontSize:40,
-        paddingBottom:20,
+        paddingBottom:35,
+        marginLeft:-50,
         alignSelf:'flex-end'
     },
     img:{

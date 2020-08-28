@@ -47,16 +47,15 @@ export default App
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor:'#16c2c2',
     flex: 1,
     paddingTop:50,
-    // backgroundColor:'blue'
   },
   abso:{
     // flex:1,
     position:'absolute',
     width:width,
     bottom:30,
-    // flexDirection:'row'
   },
   hidText:{
     flexDirection:'row',
