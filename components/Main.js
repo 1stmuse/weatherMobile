@@ -1,24 +1,29 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Dimensions} from 'react-native'
+import {View, Text, Image, StyleSheet,Animated, Dimensions} from 'react-native'
 
 import icon from '../assets/favicon.png'
 
 const {width, height} =Dimensions.get('window')
 
-const Main = ({info, data}) => {
-
+const Main = ({info, index,x}) => {
+    const inputRange = [(index-1)*width, index *width, (index +1)* width]
+    const scale = x.interpolate({
+        inputRange,
+        outputRange:[0,1,0],
+    })
     return (
-        <View style={styles.cont} >
+        <Animated.View style={styles.cont} >
            <View style={styles.city} >
-               <View style={styles.tempFlex} >
+                   <Animated.View style={[styles.tempFlex, {transform:[{scale}]}]} >
                     <Text style={styles.cityTemp} >{info.temp} </Text>
                     <Text style={styles.tempN} >0</Text>
-               </View>
+               </Animated.View>
            </View>
            <View style={{alignItems:'center'}} >
-               <Image source={require('../assets/favicon.png')} style={styles.img} />
+               <Animated.Image source={require('../assets/favicon.png')} 
+                 style={[styles.img, {transform:[{scale}]}]} />
            </View>
-        </View>
+        </Animated.View>
     );
 };
 
@@ -39,7 +44,6 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center'
         // borderColor:'blue',
-        // borderWidth:1,
     },
     cityTemp:{
         fontSize:150,

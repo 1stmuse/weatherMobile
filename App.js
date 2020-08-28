@@ -1,39 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet,View,FlatList,Text, Dimensions } from 'react-native';
+import React, {useRef} from 'react';
+import { StyleSheet,View,FlatList,Text, Dimensions, Animated } from 'react-native';
 
 import Main from './components/Main'
 import {Days} from './components/Days'
 import icon from './assets/favicon.png'
 import {datas} from './data.js'
-
+import ShowDays from './components/ShowDays'
 const {width, height} =Dimensions.get('window')
 
 const App = () => {
-
-  const renderWe=({item})=>(
-        <Main info={item} key={item.id} data={datas.data} />
+  const scrollX = useRef(new Animated.Value(0)).current
+  const ind = datas.data.map((dat,ind)=>{
+    return ind
+  })
+  const renderWe=({item, index})=>(
+    <Main 
+      info={item} 
+         key={item.id} 
+         data={datas.data} 
+         index={index}
+    x={scrollX} />
   )
-
   return (
     <View style={styles.container}>
       <StatusBar style='auto' />
       <View style={styles.cityName} ><Text style={{fontSize:20}} >{datas.country} </Text></View>
       <View style={{height:height/1.6}} >
-        <FlatList 
+        <Animated.FlatList 
+        scrollEventThrottle={16}
          horizontal
          data={datas.data}
          renderItem={renderWe}
          pagingEnabled
          keyExtractor={item=>item.id}
          showsHorizontalScrollIndicator={false}
+         onScroll={Animated.event(
+           [{nativeEvent:{contentOffset:{x:scrollX}}}],
+           {useNativeDriver:true}
+         )}
         />
       </View>
       <View style={styles.txtView} >
-        <View style={styles.hidText}>
-          {datas.data.map(dat=>{
-            return <Text style={styles.txt}>{dat.day} </Text>
-         })}
+        <View style={styles.center} >
+          <ShowDays dat={datas.data}  x={scrollX} />
         </View>
       </View>
       <View style={styles.abso}>
@@ -57,21 +67,13 @@ const styles = StyleSheet.create({
     width:width,
     bottom:30,
   },
-  hidText:{
-    flexDirection:'row',
+  center:{
     width:width/2,
-    overflow:'hidden',
-
+    overflow:'hidden'
   },
   txtView:{
     width,
     alignItems:'center'
-  },
-  txt:{
-    textAlign:'center',
-    width:'100%',
-    fontSize:20,
-    textTransform:'uppercase'
   },
   cityName:{
     alignItems:'center',
