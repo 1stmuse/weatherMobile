@@ -9,7 +9,7 @@ const Main = ({info, index,x}) => {
     const inputRange = [(index-1)*width, index *width, (index +1)* width]
     const scale = x.interpolate({
         inputRange,
-        outputRange:[0,1,0],
+        outputRange:[-0.6,1,-0.6],
     })
     return (
         <Animated.View style={styles.cont} >
