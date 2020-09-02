@@ -1,6 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useRef} from 'react';
-import { StyleSheet,View,Text, Dimensions, Animated } from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import { StyleSheet,View,Text, Dimensions, Animated, Alert,Platform, Linking } from 'react-native';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+import * as IntentLauncher from 'expo-intent-launcher';
 
 import Main from './components/Main'
 import {Days} from './components/Days'
@@ -8,10 +11,52 @@ import icon from './assets/favicon.png'
 import {datas} from './data.js'
 import ShowDays from './components/ShowDays'
 const {width, height} =Dimensions.get('window')
-const colors =['16c2c2', '#1dccb5', '#b15ae0','#ffbe0a','#c9327e','#f0590e','#5f58cc', '#5f58cc']
+const colors =['#d4fc79', '#1dccb5', '#b15ae0','#ffbe0a','#c9327e','#f0590e','#5f58cc',]
 
 const App = () => {
   const scrollX = useRef(new Animated.Value(0)).current
+  console.log('praisss00')
+  const getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      Alert.alert("alert Message", "Instructions based on OS", [
+        {
+          text: 'Open Settings',
+          onPress: () => goToSettings(),
+          style: 'cancel',
+        },
+        { onPress: () => navigation.goback()},
+      ]);
+    }else{
+      try{
+        let location = await Location.getCurrentPositionAsync({});
+        console.log(location)
+      }catch(e){
+        Alert.alert("alert Message", "Instructions based on OS", [
+          {
+            text: 'Open Settings',
+            onPress: () => goToSettings(),
+            style: 'cancel',
+          },
+          { onPress: () => navigation.goback()},
+        ]);
+      }
+    } 
+  } 
+  const goToSettings = () => {
+    if (Platform.OS == 'ios') {
+      // Linking for iOS
+      Linking.openURL('app-settings:');
+    } else {
+      // IntentLauncher for Android
+      IntentLauncher.startActivityAsync(
+        IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+      );
+    }
+  };
+  useEffect(()=>{
+    getLocationAsync()
+},[])
 
   const ColorBg=({x})=>{
     return (
@@ -23,7 +68,7 @@ const App = () => {
             outputRange:[0,1,0],
             extrapolate:'clamp'
           })
-          return <Animated.View style={[styles.bgColor, {backgroundColor:color}]} key={ind} />
+          return <Animated.View style={[styles.bgColor, {backgroundColor:color, opacity:scale}]} key={ind} />
        })}
       </View>
     )
@@ -44,7 +89,6 @@ const App = () => {
       <View style={{height:height/1.6}} >
         <Animated.FlatList 
         scrollEventThrottle={16}
-        bounces
          horizontal
          data={datas.data}
          renderItem={renderWe}
@@ -81,7 +125,7 @@ const styles = StyleSheet.create({
     // flex:1,
     position:'absolute',
     width:width,
-    bottom:30,
+    bottom:20,
   },
   center:{
     width:width/2,
@@ -96,16 +140,12 @@ const styles = StyleSheet.create({
     marginBottom:20
 },
 BG:{
-  width,
   justifyContent:'center',
-  // backgroundColor:'red',
-  alignItems:'center',
-  flexDirection:'row',
-  overlayColor:'hidden'
+  alignItems:'center'
 },
 bgColor:{
-  width:'300',
+  width,
   height,
-  // position:'absolute'
+  position:'absolute'
 }
 });

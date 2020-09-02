@@ -9,7 +9,6 @@ export const Days =({data,icon,x})=>{
         inputRange,
         outputRange:[-width/7, 0, width/7]
     })
-
     return(
     <View>
      <View style={styles.mainFlex} >
@@ -19,7 +18,7 @@ export const Days =({data,icon,x})=>{
                 <View style={styles.scrol} key={dat.id} >
                      {/* <View style={styles.scrol} > */}
                        <Image source={icon} style={{width:30}}/>
-                       <Text>{dat.temp} </Text>
+                       <Text style={{fontSize:20}} >{dat.temp} </Text>
                      {/* </View> */}
                 </View>
             )
@@ -34,12 +33,16 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         width:width,
-        paddingLeft:10,
+        height:'100%',
+        // paddingLeft:10,
         position:'relative',
         // borderWidth:1
     },
     scrol:{
         width:width/7,
+        justifyContent:'space-between',
+        alignItems:'center',
+        height:'110%'
         // borderWidth:1,
         // borderColor:'red',
         // marginRight:30
@@ -47,8 +50,9 @@ const styles = StyleSheet.create({
     scrollPag:{
         width:width/7,
         borderRadius:10,
+        marginRight:10,
         position:'absolute',
-        height:'100%',
-        backgroundColor:'red'
+        height:'120%',
+        backgroundColor:'#e9e9f5'
     }
 })
