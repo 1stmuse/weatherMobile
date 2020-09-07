@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, Text, StyleSheet, Dimensions, Animated,} from 'react-native'
-import { datas } from '../data'
+import moment from 'moment'
 
 const {width, height} =Dimensions.get('window')
 
@@ -13,7 +13,7 @@ const ShowDays=({dat, x})=>{
       return (
           <Animated.View style={[styles.hidText, {transform:[{translateX:moveX}]}]} >
               {dat.map((data, ind)=>(
-                  <Text key={ind} style={styles.txt} >{data.day} </Text>
+                  <Text key={ind} style={styles.txt} >{moment(data.dt * 1000).format('dddd')} </Text>
               ))}
           </Animated.View>
       )
@@ -31,6 +31,8 @@ const ShowDays=({dat, x})=>{
         textAlign:'center',
         width:'100%',
         fontSize:20,
-        textTransform:'uppercase'
+        textTransform:'uppercase',
+        color:'white',
+        fontWeight:'bold'
       },
   })

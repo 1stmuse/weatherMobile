@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, Image,Animated, StyleSheet, Dimensions} from 'react-native'
+import moment from 'moment'
 
 const {width, height} =Dimensions.get('window')
-export const Days =({data,icon,x})=>{
+export const Days =({data,x})=>{
     
     const inputRange = [-width, 0, width]
     const translateX = x.interpolate({
@@ -15,10 +16,10 @@ export const Days =({data,icon,x})=>{
      <Animated.View style={[styles.scrollPag, {transform:[{translateX}]}]}/>
         {data.map((dat, index)=>{
             return (
-                <View style={styles.scrol} key={dat.id} >
+                <View style={styles.scrol} key={index} >
                      {/* <View style={styles.scrol} > */}
-                       <Image source={icon} style={{width:30}}/>
-                       <Text style={{fontSize:20}} >{dat.temp} </Text>
+                       <Image source={{uri:`http://openweathermap.org/img/wn/${dat.weather[0].icon}@2x.png`}} style={{width:50,height:50, borderWidth:1}}/>
+                       <Text style={{fontSize:20}} >{moment(dat.dt * 1000).format('ddd')} </Text>
                      {/* </View> */}
                 </View>
             )

@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet,Animated, Dimensions} from 'react-native'
+import {View, Text, StyleSheet,Animated, Dimensions} from 'react-native'
 
-import icon from '../assets/favicon.png'
 
 const {width, height} =Dimensions.get('window')
 
@@ -11,17 +10,22 @@ const Main = ({info, index,x}) => {
         inputRange,
         outputRange:[-0.6,1,-0.6],
     })
+    const opacity = x.interpolate({
+        inputRange,
+        outputRange:[0,1,0],
+    })
     return (
         <Animated.View style={styles.cont} >
            <View style={styles.city} >
-                   <Animated.View style={[styles.tempFlex, {transform:[{scale}]}]} >
-                    <Text style={styles.cityTemp} >{info.temp} </Text>
+                <Animated.View style={[styles.tempFlex, {transform:[{scale}]}]} >
+                    <Text style={styles.cityTemp} >{(info.temp.day - 273).toFixed()} </Text>
                     <Text style={styles.tempN} >0</Text>
                </Animated.View>
            </View>
            <View style={{alignItems:'center'}} >
-               <Animated.Image source={require('../assets/favicon.png')} 
+               <Animated.Image source={{uri:`http://openweathermap.org/img/wn/${info.weather[0].icon}@2x.png`}} 
                  style={[styles.img, {transform:[{scale}]}]} />
+                 <Animated.Text style={{color:'white', fontSize:20, fontWeight:'bold',opacity}} >{info.weather[0].description} </Animated.Text>
            </View>
         </Animated.View>
     );
@@ -32,32 +36,32 @@ export default Main;
 const styles = StyleSheet.create({
     cont: {
       flex: 1,
-      width
+      width,
     },
     city:{
         alignItems:'center',
         justifyContent:'space-between',
-        height:height/3
+        height:height/4,
     },
     tempFlex:{
         flexDirection:"row",
         justifyContent:'center',
-        alignItems:'center'
-        // borderColor:'blue',
+        alignItems:'center',
     },
     cityTemp:{
         fontSize:150,
         textAlign:'right',
-        // marginLeft:40
+        color:'white'
     },
     tempN:{
         fontSize:40,
-        paddingBottom:35,
-        marginLeft:-50,
-        alignSelf:'flex-end'
+        marginLeft:-30,
+        paddingTop:30,
+        alignSelf:'flex-start',
+        color:'white'
     },
     img:{
-        width:150,
-        height:150
+        width:250,
+        height:250,
     },
   });

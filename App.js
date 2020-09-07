@@ -1,44 +1,57 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import { StyleSheet,View,Text, Dimensions, Animated, Alert,Platform, Linking } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import * as IntentLauncher from 'expo-intent-launcher';
+import {Bars, Pulse, Bubbles, DoubleBounce} from 'react-native-loader'
 
 import Main from './components/Main'
 import {Days} from './components/Days'
 import icon from './assets/favicon.png'
-import {datas} from './data.js'
 import ShowDays from './components/ShowDays'
 const {width, height} =Dimensions.get('window')
-const colors =['#d4fc79', '#1dccb5', '#b15ae0','#ffbe0a','#c9327e','#f0590e','#5f58cc',]
+const colors =['#0d3601', '#01053d', '#410063','#313300','#54003b','#6e0012','#001716',]
 
 const App = () => {
   const scrollX = useRef(new Animated.Value(0)).current
-  console.log('praisss00')
+  const [weather, setWeather] = useState([])
+  const [load, setLoad]= useState(false)
+  const [whr, setWhr] = useState('')
+
   const getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
-      Alert.alert("alert Message", "Instructions based on OS", [
+      Alert.alert("alert Message", "allow location", [
         {
           text: 'Open Settings',
           onPress: () => goToSettings(),
           style: 'cancel',
-        },
-        { onPress: () => navigation.goback()},
+        } 
       ]);
     }else{
       try{
         let location = await Location.getCurrentPositionAsync({});
-        console.log(location)
+        setLoad(true)
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${location.coords.latitude}&lon=${location.coords.longitude}&exclude=hourly,current,minutely&appid=1ffd27ee8105ee9ec0924dc6ed83867b`)
+        .then(res=>res.json())
+        .then(data=>{
+          setWeather(data.daily.splice(0,7))
+          setWhr(data.timezone)
+          setLoad(false)
+        })
+        .catch(err=>{
+          if(err){
+            Alert.alert('error', 'cannot seem to connect to the internet')
+          }
+        })
       }catch(e){
-        Alert.alert("alert Message", "Instructions based on OS", [
+        Alert.alert("Oooopppsss", "you have to allow loaction", [
           {
             text: 'Open Settings',
             onPress: () => goToSettings(),
-            style: 'cancel',
-          },
-          { onPress: () => navigation.goback()},
+            style: 'cancel', 
+          }
         ]);
       }
     } 
@@ -54,6 +67,8 @@ const App = () => {
       );
     }
   };
+
+
   useEffect(()=>{
     getLocationAsync()
 },[])
@@ -76,24 +91,35 @@ const App = () => {
   const renderWe=({item, index})=>(
     <Main 
       info={item} 
-         key={item.id} 
-         data={datas.data} 
+         key={index} 
+         data={item} 
          index={index}
-    x={scrollX} />
+         whr={whr}
+        x={scrollX} />
   )
+
+  if(weather.length === 0){
+    return (
+      <View style={{flex:1, justifyContent:'center', alignItems:'center', backgroundColor:'black'}} >
+        <Bars size={20} color='white'/>
+        <StatusBar style='inverted' />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
-      <StatusBar style='auto' hidden/>
+      <StatusBar style='inverted' />
       <ColorBg x={scrollX} />
-      <View style={styles.cityName} ><Text style={{fontSize:20}} >{datas.country} </Text></View>
+      <View style={styles.cityName} ><Text style={{fontSize:40, color:'white'}} >{whr.split('/')[1]} </Text></View>
       <View style={{height:height/1.6}} >
         <Animated.FlatList 
         scrollEventThrottle={16}
          horizontal
-         data={datas.data}
+         data={weather}
          renderItem={renderWe}
          pagingEnabled
-         keyExtractor={item=>item.id}
+         keyExtractor={item=> `${item.dt}`}
          showsHorizontalScrollIndicator={false}
          onScroll={Animated.event(
            [{nativeEvent:{contentOffset:{x:scrollX}}}],
@@ -103,11 +129,11 @@ const App = () => {
       </View>
       <View style={styles.txtView} >
         <View style={styles.center} >
-          <ShowDays dat={datas.data}  x={scrollX} />
+          <ShowDays dat={weather}  x={scrollX} />
         </View>
       </View>
       <View style={styles.abso}>
-        <Days data={datas.data} icon={icon} x={scrollX} />
+        <Days data={weather} icon={icon} x={scrollX} />
       </View>
     </View>
   );
@@ -125,7 +151,7 @@ const styles = StyleSheet.create({
     // flex:1,
     position:'absolute',
     width:width,
-    bottom:20,
+    bottom:15,
   },
   center:{
     width:width/2,
@@ -137,7 +163,7 @@ const styles = StyleSheet.create({
   },
   cityName:{
     alignItems:'center',
-    marginBottom:20
+    marginBottom:10,
 },
 BG:{
   justifyContent:'center',
