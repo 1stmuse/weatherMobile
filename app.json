@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/MENU.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#red"
     },
@@ -17,10 +17,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.muse.weatherCast"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "sdkVersion": "38.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.muse.weatherCast"
     }
   }
 }

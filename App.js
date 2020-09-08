@@ -11,7 +11,7 @@ import {Days} from './components/Days'
 import icon from './assets/favicon.png'
 import ShowDays from './components/ShowDays'
 const {width, height} =Dimensions.get('window')
-const colors =['#0d3601', '#01053d', '#410063','#313300','#54003b','#6e0012','#001716',]
+const colors =['#0d3601', '#845EC2', '#410063','#313300','#54003b','#008B74','#008E9B',]
 
 const App = () => {
   const scrollX = useRef(new Animated.Value(0)).current

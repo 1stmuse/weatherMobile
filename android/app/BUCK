@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.weathermobile",
+    package = "com.muse.weatherCast",
 )
 
 android_resource(
     name = "res",
-    package = "com.weathermobile",
+    package = "com.muse.weatherCast",
     res = "src/main/res",
 )
 
