@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet,Animated, Dimensions} from 'react-native'
 
-
 const {width, height} =Dimensions.get('window')
 
 const Main = ({info, index,x}) => {
