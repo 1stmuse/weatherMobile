@@ -4,6 +4,7 @@ import { StyleSheet,View,Text, Dimensions, Animated, Alert,Platform, Linking } f
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import * as IntentLauncher from 'expo-intent-launcher';
+import Splashscreen from 'react-native-splash-screen'
 import {Bars, Pulse, Bubbles, DoubleBounce} from 'react-native-loader'
 
 import Main from './components/Main'
@@ -68,6 +69,9 @@ const App = () => {
     }
   };
 
+  useEffect(()=>{
+    Splashscreen.hide()
+  })
 
   useEffect(()=>{
     getLocationAsync()
